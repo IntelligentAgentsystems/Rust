@@ -9,5 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build Ping/Pong
-      run: cd ping-pong && cargo build --verbose
+    - name: Build
+      run: cargo build
+    - name: Test
+      run: cargo test
