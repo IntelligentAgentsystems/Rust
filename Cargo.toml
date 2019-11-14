@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "factory-functional-units",
+    "ping-pong",
+]
