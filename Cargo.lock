@@ -370,7 +370,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "factory-functional-units"
+name = "factory_functional_units"
 version = "0.1.0"
 
 [[package]]
@@ -752,7 +752,7 @@ version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "ping-pong"
+name = "ping_pong"
 version = "0.1.0"
 dependencies = [
  "actix 0.8.3 (registry+https://github.com/rust-lang/crates.io-index)",

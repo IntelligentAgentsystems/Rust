@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "factory-functional-units",
-    "ping-pong",
+    "factory_functional_units",
+    "ping_pong",
 ]

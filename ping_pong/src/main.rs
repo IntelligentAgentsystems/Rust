@@ -1,4 +1,3 @@
-use std::time::Duration;
 use actix::prelude::*;
 
 struct Ping {
@@ -24,7 +23,7 @@ impl Actor for Pinger {
 impl Handler<Ping> for Pinger {
     type Result = ();
 
-     fn handle(&mut self, msg: Ping, ctx: &mut Context<Self>) -> Self::Result {
+     fn handle(&mut self, msg: Ping, _ctx: &mut Context<Self>) -> Self::Result {
         println!("Pinger #{}: Got Ping #{} '{}'", self.id, msg.id, msg.message);
 
         self.other.do_send(Ping{id: msg.id + 1, message: self.sends.clone()})

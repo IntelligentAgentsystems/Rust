@@ -1,5 +1,5 @@
 [package]
-name = "ping-pong"
+name = "ping_pong"
 version = "0.1.0"
 authors = [
     "Martin Hochstrasser <highstreeto@users.noreply.github.com>",
