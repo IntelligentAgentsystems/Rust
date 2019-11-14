@@ -77,6 +77,13 @@ pub struct Plotter {
 }
 
 impl Plotter {
+    pub fn new(name: &str) -> Plotter {
+        Plotter {
+            name: String::from(name),
+            has_paper: false,
+        }
+    }
+
     pub fn plot(&self) -> Result<(), String> {
         if !self.has_paper {
             Err(String::from("No paper"))
