@@ -55,6 +55,10 @@ impl Conveyer {
         &self.current_orientation
     }
 
+    pub fn has_paper(&self) -> bool {
+        self.has_paper
+    }
+
     pub fn turn_to(&mut self, new_orientation: Orientation) {
         if self.current_orientation != new_orientation {
             println!("Conveyer '{}'- turn_to {}", self.name, new_orientation);
@@ -94,6 +98,14 @@ impl Plotter {
             name: String::from(name),
             has_paper: false,
         }
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn has_paper(&self) -> bool {
+        self.has_paper
     }
 
     pub fn plot(&self) -> Result<(), String> {
@@ -139,6 +151,14 @@ impl InputStack {
         }
     }
 
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn paper_count(&self) -> u32 {
+        self.paper_count
+    }
+
     pub fn push_out(&mut self) -> Result<(), String> {
         if self.paper_count == 0 {
             Err(String::from("No paper left"))
@@ -161,6 +181,14 @@ impl OutputStack {
             name: String::from(name),
             paper_count: 0,
         }
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn paper_count(&self) -> u32 {
+        self.paper_count
     }
 
     pub fn pull_in(&mut self) {
