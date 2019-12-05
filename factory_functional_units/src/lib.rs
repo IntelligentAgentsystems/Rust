@@ -1,7 +1,8 @@
 use std::cmp::PartialEq;
+use std::marker::Copy;
 use std::fmt::{Display, Formatter};
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Copy, Clone)]
 pub enum Orientation {
     North,
     East,
