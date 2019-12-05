@@ -9,6 +9,17 @@ pub enum Orientation {
     West,
 }
 
+impl Orientation {
+    pub fn inverse(&self) -> Orientation {
+        match self {
+            Orientation::North => Orientation::South,
+            Orientation::East => Orientation::West,
+            Orientation::South => Orientation::North,
+            Orientation::West => Orientation::East,
+        }
+    }
+}
+
 impl Display for Orientation {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
