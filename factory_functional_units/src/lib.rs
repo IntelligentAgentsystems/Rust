@@ -172,6 +172,18 @@ impl OutputStack {
 mod tests {
     use super::*;
 
+    mod orientation {
+        use super::*;
+
+        #[test]
+        fn inverse() {
+            assert_eq!(Orientation::North.inverse(), Orientation::South);
+            assert_eq!(Orientation::East.inverse(), Orientation::West);
+            assert_eq!(Orientation::South.inverse(), Orientation::North);
+            assert_eq!(Orientation::West.inverse(), Orientation::East);
+        }
+    }
+
     mod conveyer {
         use super::*;
 
