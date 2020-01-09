@@ -2,6 +2,10 @@ use std::cmp::PartialEq;
 use std::marker::Copy;
 use std::fmt::{Display, Formatter};
 
+pub use self::services::PlotterServer;
+
+pub mod services;
+
 #[derive(PartialEq, Debug, Copy, Clone)]
 pub enum Orientation {
     North,

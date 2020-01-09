@@ -5,3 +5,10 @@ authors = ["Martin Hochstrasser <highstreeto@users.noreply.github.com>"]
 edition = "2018"
 
 [dependencies]
+tonic = "0.1.0-beta.1"
+bytes = "0.4"
+prost = "0.5"
+tokio = { version = "0.2", features = ["macros"] }
+
+[build-dependencies]
+tonic-build = "0.1.0-beta.1"

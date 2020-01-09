@@ -1,0 +1,29 @@
+syntax = "proto3";
+package functional_units;
+
+import "google/protobuf/empty.proto";
+
+enum Orientation {
+    NORTH = 0;
+    EAST = 1;
+    SOUTH = 2;
+    WEST = 3;
+}
+
+service Plotter {
+    rpc Status (google.protobuf.Empty) returns (StatusResponse);
+    rpc Draw (google.protobuf.Empty) returns (DrawResult);
+}
+
+message StatusResponse {
+    string name = 1;
+    bool has_paper = 2;
+}
+
+message DrawResult {
+    enum Code {
+        OK = 0;
+        NO_PAPER = 1;
+    }
+    Code code = 1;
+}
