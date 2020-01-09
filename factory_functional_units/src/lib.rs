@@ -36,15 +36,15 @@ impl Display for Orientation {
     }
 }
 
-pub struct Conveyer {
+pub struct Conveyor {
     name: String,
     current_orientation: Orientation,
     has_paper: bool,
 }
 
-impl Conveyer {
-    pub fn new(name: &str) -> Conveyer {
-        Conveyer {
+impl Conveyor {
+    pub fn new(name: &str) -> Conveyor {
+        Conveyor {
             name: String::from(name),
             current_orientation: Orientation::East,
             has_paper: false,
@@ -223,14 +223,14 @@ mod tests {
         #[test]
         fn new() {
             let name = "Left";
-            let conv = Conveyer::new(name);
+            let conv = Conveyor::new(name);
             assert_eq!(name, conv.name());
             assert_eq!(&Orientation::East, conv.orientation());
         }
 
         #[test]
         fn turn_to() {
-            let mut conv = Conveyer::new("Left");
+            let mut conv = Conveyor::new("Left");
             conv.turn_to(Orientation::North);
             assert_eq!(&Orientation::North, conv.orientation());
 
@@ -246,7 +246,7 @@ mod tests {
 
         #[test]
         fn pull_and_push() -> Result<(), String> {
-            let mut conv = Conveyer::new("Left");
+            let mut conv = Conveyor::new("Left");
             conv.pull()?;
             assert_eq!(true, conv.has_paper);
             assert_eq!(&Orientation::East, conv.orientation());
@@ -260,13 +260,13 @@ mod tests {
 
         #[test]
         fn empty_push() {
-            let mut conv = Conveyer::new("Left");
+            let mut conv = Conveyor::new("Left");
             assert_eq!(Err(String::from("Conveyer empty")), conv.push());
         }
 
         #[test]
         fn full_pull() {
-            let mut conv = Conveyer::new("Left");
+            let mut conv = Conveyor::new("Left");
             assert_eq!(Ok(()), conv.pull());
 
             assert_eq!(Err(String::from("Conveyer full")), conv.pull());
