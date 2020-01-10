@@ -3,6 +3,8 @@ use std::marker::Copy;
 use std::fmt::{Display, Formatter};
 
 pub use self::services::PlotterServer;
+pub use self::services::ConveyorServer;
+use crate::PlotterError::{PlotterEmpty, PlotterFull, NoPaper};
 
 pub mod services;
 
@@ -96,6 +98,12 @@ pub struct Plotter {
     has_paper: bool,
 }
 
+pub enum PlotterError {
+    NoPaper,
+    PlotterFull,
+    PlotterEmpty
+}
+
 impl Plotter {
     pub fn new(name: &str) -> Plotter {
         Plotter {
@@ -112,18 +120,18 @@ impl Plotter {
         self.has_paper
     }
 
-    pub fn plot(&self) -> Result<(), String> {
+    pub fn plot(&self) -> Result<(), PlotterError> {
         if !self.has_paper {
-            Err(String::from("No paper"))
+            Err(NoPaper)
         } else {
             println!("Plotter '{}'- plot", self.name);
             Ok(())
         }
     }
 
-    pub fn push_out(&mut self) -> Result<(), String> {
+    pub fn push_out(&mut self) -> Result<(), PlotterError> {
         if !self.has_paper {
-            Err(String::from("No paper"))
+            Err(PlotterEmpty)
         } else {
             println!("Plotter '{}'- push_out", self.name);
             self.has_paper = false;
@@ -131,9 +139,9 @@ impl Plotter {
         }
     }
 
-    pub fn pull_in(&mut self) -> Result<(), String> {
-        if !self.has_paper {
-            Err(String::from("Plotter full"))
+    pub fn pull_in(&mut self) -> Result<(), PlotterError> {
+        if self.has_paper {
+            Err(PlotterFull)
         } else {
             println!("Plotter '{}'- push_in", self.name);
             self.has_paper = true;

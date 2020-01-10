@@ -1,16 +1,72 @@
-use factory_functional_units::Plotter;
-use factory_functional_units::PlotterServer;
+use clap::{App, Arg, arg_enum, value_t};
 use tonic::{transport::Server};
+
+use factory_functional_units::{Plotter, Conveyor, InputStack, OutputStack};
+use factory_functional_units::{PlotterServer, ConveyorServer};
+
+arg_enum!{
+    #[derive(PartialEq, Debug)]
+    pub enum Unit {
+        Plotter,
+        Conveyer,
+        InputStack,
+        OutputStack
+    }
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "0.0.0.0:50051".parse()?;
-    let plotter = Plotter::new("Plotter 1");
+    let matches = App::new("factory_functional_units")
+        .version("0.1.3")
+        .arg(Arg::with_name("port")
+            .short("p")
+            .long("port")
+            .value_name("PORT")
+            .help("Sets the port the service listens to")
+            .required(true)
+            .takes_value(true))
+        .arg(Arg::with_name("unit")
+            .short("u")
+            .long("unit")
+            .value_name("UNIT")
+            .possible_values(&Unit::variants())
+            .case_insensitive(true)
+            .required(true)
+            .takes_value(true))
+        .arg(Arg::with_name("name")
+            .short("n")
+            .long("name")
+            .default_value("Unnamed"))
+        .get_matches();
 
-    Server::builder()
-        .add_service(PlotterServer::new(plotter))
-        .serve(addr)
-        .await?;
+    let port = matches.value_of("port").unwrap();
+    let unit: Unit = value_t!(matches, "unit", Unit).unwrap();
+    let name = matches.value_of("name").unwrap();
+
+    let addr = format!("0.0.0.0:{}", port).parse()?;
+    println!("Running unit {} '{}' and binding to {}", unit, name, addr);
+    match unit {
+        Unit::Plotter => {
+            let plotter = Plotter::new(name);
+            Server::builder()
+                .add_service(PlotterServer::new(plotter))
+                .serve(addr)
+                .await?;
+        },
+        Unit::Conveyer => {
+            let conv = Conveyor::new(name);
+            Server::builder()
+                .add_service(ConveyorServer::new(conv))
+                .serve(addr)
+                .await?;
+        },
+        Unit::InputStack => {
+            let stack = InputStack::new(name, 10);
+        },
+        Unit::OutputStack => {
+            let stack = OutputStack::new(name);
+        },
+    }
 
     Ok(())
 }
