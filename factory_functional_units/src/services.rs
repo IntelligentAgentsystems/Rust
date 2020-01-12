@@ -145,7 +145,7 @@ impl proto::conveyor_server::Conveyor for ConveyorServerState {
     async fn push(&self, _: Request<()>) -> Result<Response<proto::PushOrPullResult>, Status> {
         let mut state = self.state.lock().unwrap();
         let res = state.push();
-        println!("pull - {:?}", res);
+        println!("push - {:?}", res);
         Ok(Response::new(res.into()))
     }
 
@@ -153,7 +153,7 @@ impl proto::conveyor_server::Conveyor for ConveyorServerState {
         let mut state = self.state.lock().unwrap();
         let target = proto::Orientation::from_i32(req.get_ref().target).unwrap();
         state.turn_to(target.into());
-        println!("turn_to");
+        println!("turn_to - {:?}", target);
 
         Ok(Response::new(()))
     }

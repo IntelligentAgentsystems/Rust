@@ -7,7 +7,7 @@ arg_enum! {
     #[derive(PartialEq, Debug)]
     pub enum Unit {
         Plotter,
-        Conveyer,
+        Conveyor,
         InputStack,
         OutputStack
     }
@@ -31,6 +31,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .short("u")
                 .long("unit")
                 .value_name("UNIT")
+                .help("Defines which unit to run (only one unit can run)")
                 .possible_values(&Unit::variants())
                 .case_insensitive(true)
                 .required(true)
@@ -40,6 +41,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Arg::with_name("name")
                 .short("n")
                 .long("name")
+                .help("Name of the unit (visible when querying status)")
                 .default_value("Unnamed"),
         )
         .get_matches();
@@ -80,6 +82,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .await?;
         }
     }
-
     Ok(())
 }
