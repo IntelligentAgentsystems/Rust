@@ -44,6 +44,6 @@ mod tests {
         assert_eq!(1, stack.paper_count());
 
         stack.pull();
-        assert_eq!(1, stack.paper_count());
+        assert_eq!(2, stack.paper_count());
     }
 }

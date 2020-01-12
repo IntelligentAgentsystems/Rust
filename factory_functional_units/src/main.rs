@@ -60,7 +60,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .serve(addr)
                 .await?;
         }
-        Unit::Conveyer => {
+        Unit::Conveyor => {
             let conv = Conveyor::new(name);
             Server::builder()
                 .add_service(ConveyorServer::new(ConveyorServerState::new(conv)))
