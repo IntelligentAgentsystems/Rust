@@ -1,10 +1,9 @@
 use clap::{App, Arg, arg_enum, value_t};
-use tonic::{transport::Server};
+use tonic::transport::Server;
 
-use factory_functional_units::{Plotter, Conveyor, InputStack, OutputStack};
-use factory_functional_units::{PlotterServer, ConveyorServer};
+use factory_functional_units::*;
 
-arg_enum!{
+arg_enum! {
     #[derive(PartialEq, Debug)]
     pub enum Unit {
         Plotter,
@@ -18,25 +17,31 @@ arg_enum!{
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let matches = App::new("factory_functional_units")
         .version("0.1.3")
-        .arg(Arg::with_name("port")
-            .short("p")
-            .long("port")
-            .value_name("PORT")
-            .help("Sets the port the service listens to")
-            .required(true)
-            .takes_value(true))
-        .arg(Arg::with_name("unit")
-            .short("u")
-            .long("unit")
-            .value_name("UNIT")
-            .possible_values(&Unit::variants())
-            .case_insensitive(true)
-            .required(true)
-            .takes_value(true))
-        .arg(Arg::with_name("name")
-            .short("n")
-            .long("name")
-            .default_value("Unnamed"))
+        .arg(
+            Arg::with_name("port")
+                .short("p")
+                .long("port")
+                .value_name("PORT")
+                .help("Sets the port the service listens to")
+                .required(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("unit")
+                .short("u")
+                .long("unit")
+                .value_name("UNIT")
+                .possible_values(&Unit::variants())
+                .case_insensitive(true)
+                .required(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("name")
+                .short("n")
+                .long("name")
+                .default_value("Unnamed"),
+        )
         .get_matches();
 
     let port = matches.value_of("port").unwrap();
@@ -49,23 +54,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Unit::Plotter => {
             let plotter = Plotter::new(name);
             Server::builder()
-                .add_service(PlotterServer::new(plotter))
+                .add_service(PlotterServer::new(PlotterServerState::new(plotter)))
                 .serve(addr)
                 .await?;
-        },
+        }
         Unit::Conveyer => {
             let conv = Conveyor::new(name);
             Server::builder()
-                .add_service(ConveyorServer::new(conv))
+                .add_service(ConveyorServer::new(ConveyorServerState::new(conv)))
                 .serve(addr)
                 .await?;
-        },
+        }
         Unit::InputStack => {
             let stack = InputStack::new(name, 10);
-        },
+            Server::builder()
+                .add_service(InputStackServer::new(InputStackServerState::new(stack)))
+                .serve(addr)
+                .await?;
+        }
         Unit::OutputStack => {
             let stack = OutputStack::new(name);
-        },
+            Server::builder()
+                .add_service(OutputStackServer::new(OutputStackServerState::new(stack)))
+                .serve(addr)
+                .await?;
+        }
     }
 
     Ok(())

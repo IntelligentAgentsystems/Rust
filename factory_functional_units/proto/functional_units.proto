@@ -10,9 +10,20 @@ enum Orientation {
     WEST = 3;
 }
 
+message PushOrPullResult {
+    enum Code {
+        OK = 0;
+        EMPTY = 1;
+        FULL = 2;
+    }
+    Code code = 1;
+}
+
 service Plotter {
     rpc Status (google.protobuf.Empty) returns (PlotterStatus);
     rpc Plot (google.protobuf.Empty) returns (PlotResult);
+    rpc Push (google.protobuf.Empty) returns (PushOrPullResult);
+    rpc Pull (google.protobuf.Empty) returns (PushOrPullResult);
 }
 
 message PlotterStatus {
@@ -45,11 +56,22 @@ message ConveyorStatus {
     Orientation orientation = 3;
 }
 
-message PushOrPullResult {
-    enum Code {
-        OK = 0;
-        EMPTY = 1;
-        FULL = 2;
-    }
-    Code code = 1;
+service InputStack {
+    rpc Status (google.protobuf.Empty) returns (InputStackStatus);
+    rpc Push (google.protobuf.Empty) returns (PushOrPullResult);
+}
+
+message InputStackStatus {
+    string name = 1;
+    uint32 paper_count = 2;
+}
+
+service OutputStack {
+    rpc Status (google.protobuf.Empty) returns (OutputStackStatus);
+    rpc Pull (google.protobuf.Empty) returns (PushOrPullResult);
+}
+
+message OutputStackStatus {
+    string name = 1;
+    uint32 paper_count = 2;
 }
