@@ -1,0 +1,3 @@
+# Ingore gnerated tonic files
+src/server/functional_units.rs
+src/server/google.protobuf.rs

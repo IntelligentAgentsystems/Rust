@@ -6,7 +6,7 @@ pub use self::conveyor::*;
 pub use self::input_stack::*;
 pub use self::output_stack::*;
 pub use self::plotter::*;
-pub use self::services::{
+pub use self::server::{
     ConveyorServer, ConveyorServerState, InputStackServer, InputStackServerState,
     OutputStackServer, OutputStackServerState, PlotterServer, PlotterServerState,
 };
@@ -15,7 +15,7 @@ mod conveyor;
 mod input_stack;
 mod output_stack;
 mod plotter;
-mod services;
+mod server;
 
 #[derive(PartialEq, Debug, Copy, Clone)]
 pub enum Orientation {
