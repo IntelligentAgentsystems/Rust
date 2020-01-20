@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderClient", "OrderClient\OrderClient.csproj", "{4BF9C53F-66A1-4843-B2E9-748450F93F93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "protos", "protos", "{CFF1E79F-79EF-44E7-B70C-07BC8EC2AA12}"
+	ProjectSection(SolutionItems) = preProject
+		protos\fiab.proto = protos\fiab.proto
+		protos\functional_units.proto = protos\functional_units.proto
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BF9C53F-66A1-4843-B2E9-748450F93F93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BF9C53F-66A1-4843-B2E9-748450F93F93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BF9C53F-66A1-4843-B2E9-748450F93F93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BF9C53F-66A1-4843-B2E9-748450F93F93}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {06F3376B-61A6-4CB4-AE92-E2607AAC72D1}
+	EndGlobalSection
+EndGlobal
