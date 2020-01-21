@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
@@ -15,7 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Remove="Features\ConnectionTestView.xaml" />
+    <AvaloniaResource Remove="Features\Ordering\NewOrderView.xaml" />
+    <AvaloniaResource Remove="Features\Ordering\OrderOverviewView.xaml" />
     <AvaloniaResource Remove="ShellView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Features\Ordering\NewOrderView.xaml" />
+    <None Remove="Features\Ordering\OrderOverviewView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.0" />
@@ -41,5 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="..\protos\fiab.proto" GrpcServices="Client" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Features\Ordering\OrderOverviewView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Features\Ordering\NewOrderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

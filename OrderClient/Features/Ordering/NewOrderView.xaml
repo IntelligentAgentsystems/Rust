@@ -1,0 +1,84 @@
+﻿<UserControl
+    x:Class="OrderClient.Features.Ordering.NewOrderView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:OrderClient.Features.Ordering"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <local:NewOrderViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="Button.func">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Width" Value="45" />
+            <Setter Property="Margin" Value="2,1,0,1" />
+            <Setter Property="Content" Value="+" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid Margin="5" IsEnabled="{Binding CanEdit}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="4*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            Text="Customer:" />
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Text="{Binding Customer}" />
+
+        <DockPanel Grid.Row="2" Grid.Column="0">
+            <TextBlock VerticalAlignment="Top" Text="Functions:" />
+            <Button
+                Height="25"
+                Margin="0,0,2,0"
+                VerticalAlignment="Bottom"
+                Command="{Binding Remove}"
+                CommandParameter="{Binding #funcList.SelectedIndex}"
+                DockPanel.Dock="Bottom">
+                Remove
+            </Button>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="1">
+            <UniformGrid Columns="1" DockPanel.Dock="Right">
+                <Button
+                    Background="LightSalmon"
+                    Classes="func"
+                    Command="{Binding AddRed}" />
+                <Button
+                    Background="LightGreen"
+                    Classes="func"
+                    Command="{Binding AddGreen}" />
+                <Button
+                    Background="LightBlue"
+                    Classes="func"
+                    Command="{Binding AddBlue}" />
+                <Button
+                    Background="LightYellow"
+                    Classes="func"
+                    Command="{Binding AddYellow}" />
+            </UniformGrid>
+
+            <ListBox
+                Name="funcList"
+                MinHeight="100"
+                Items="{Binding Functions}" />
+        </DockPanel>
+    </Grid>
+</UserControl>

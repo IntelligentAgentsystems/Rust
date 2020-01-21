@@ -3,23 +3,39 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OrderClient.Features
+namespace OrderClient.Features.Ordering
 {
-	public class ConnectionTestViewModel : ViewModelBase
+	public class OrderOverviewViewModel : ViewModelBase
 	{
-		private string host;
 		private string output;
-		private bool isReady;
+		private string host;
+		private bool orderInProgress;
 
-		public ConnectionTestViewModel()
+		public OrderOverviewViewModel()
 		{
 			Host = "localhost:5010";
-			IsReady = true;
+
+			NewOrder = new NewOrderViewModel();
+			NewOrder.PropertyChanged += (s, e) =>
+			{
+				if (e.PropertyName == nameof(NewOrderViewModel.IsValid))
+					Raise(nameof(CanStartOrder));
+			};
 		}
+
+		public NewOrderViewModel NewOrder { get; }
+
+		public bool CanStartOrder 
+			=> !orderInProgress 
+			&& (NewOrder?.IsValid ?? false)
+			&& !string.IsNullOrWhiteSpace(Host);
 
 		public string Host {
 			get => host;
-			set => Set(ref host, value);
+			set {
+				if (Set(ref host, value))
+					Raise(nameof(CanStartOrder));
+			}
 		}
 
 		public string Output {
@@ -27,15 +43,13 @@ namespace OrderClient.Features
 			set => Set(ref output, value);
 		}
 
-		public bool IsReady {
-			get => isReady;
-			set => Set(ref isReady, value);
-		}
-
-		public async Task TestConnection()
+		public async Task StartOrder()
 		{
 			Output = "";
-			IsReady = false;
+			orderInProgress = true;
+			NewOrder.CanEdit = false;
+
+			Raise(nameof(CanStartOrder));
 
 			try
 			{
@@ -43,8 +57,8 @@ namespace OrderClient.Features
 				var client = new Fiab.OrderService.OrderServiceClient(channel);
 
 				var request = new Fiab.OrderRequest();
-				request.Customer = "Martin";
-				request.Functions.Add(Fiab.PlotterFunction.DrawBlue);
+				request.Customer = NewOrder.Customer;
+				request.Functions.AddRange(NewOrder.Functions);
 
 				using (var call = client.Order(request))
 				{
@@ -87,7 +101,10 @@ namespace OrderClient.Features
 			}
 			finally
 			{
-				IsReady = true;
+				orderInProgress = false;
+				NewOrder.CanEdit = true;
+
+				Raise(nameof(CanStartOrder));
 			}
 		}
 	}

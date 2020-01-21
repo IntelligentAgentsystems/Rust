@@ -1,9 +1,4 @@
-﻿using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OrderClient
+﻿namespace OrderClient
 {
 	public class ShellViewModel : ViewModelBase
 	{
@@ -11,12 +6,12 @@ namespace OrderClient
 
 		public ShellViewModel()
 		{
-			Main = new Features.ConnectionTestViewModel();
+			Main = new Features.Ordering.OrderOverviewViewModel();
 		}
 
 		public ViewModelBase Main {
 			get => main;
-			set => this.RaiseAndSetIfChanged(ref main, value);
+			set => Set(ref main, value);
 		}
 	}
 }
