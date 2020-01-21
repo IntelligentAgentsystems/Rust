@@ -1,8 +1,36 @@
 syntax = "proto3";
 package fiab;
 
-import "google/protobuf/empty.proto";
-
 service OrderService {
-    rpc Order(google.protobuf.Empty) returns (google.protobuf.Empty);
+    rpc Order(OrderRequest) returns (stream OrderStatusUpdate);
+}
+
+enum PlotterFunction {
+    DRAW_RED = 0;
+    DRAW_GREEN = 1;
+    DRAW_BLUE = 2;
+    DRAW_YELLOW = 3;
+}
+
+message OrderRequest {
+    string customer = 1;
+    repeated PlotterFunction functions = 2;
+}
+
+message OrderStatusUpdate {
+    uint32 order_id = 1;
+    /*
+    Next function or empty string if order has no further function to progress to
+    */
+    string next_func = 2;
+    enum State {
+        STARTED = 0;
+        IN_PROGRESS = 1;
+        DONE = 2;
+        PATH_IN_USE_TOO_OFTEN = 3;
+        NO_PATH_FOUND = 5;
+        PLOTTING_FAILED = 6;
+        TRANSPORT_FAILED = 7;
+    }
+    State state = 3;
 }

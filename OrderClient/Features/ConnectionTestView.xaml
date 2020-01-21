@@ -18,7 +18,8 @@
         <Button
             Margin="0,2"
             Command="{Binding TestConnection}"
-            Content="Test" />
+            Content="Test"
+            IsEnabled="{Binding IsReady}" />
         <TextBox
             Height="200"
             IsReadOnly="True"
