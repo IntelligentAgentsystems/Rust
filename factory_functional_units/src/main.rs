@@ -1,4 +1,4 @@
-use clap::{App, Arg, arg_enum, value_t};
+use clap::{arg_enum, value_t, App, Arg};
 use tonic::transport::Server;
 
 use factory_functional_units::*;
@@ -51,10 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let unit: Unit = value_t!(matches, "unit", Unit).unwrap();
     let name = matches.value_of("name").unwrap();
 
-    let delayer = Delayer::new(
-        Duration::from_millis(100),
-        Duration::from_millis(500)
-    );
+    let delayer = Delayer::new(Duration::from_millis(100), Duration::from_millis(500));
 
     let addr = format!("0.0.0.0:{}", port).parse()?;
     println!("Running unit {} '{}' and binding to {}", unit, name, addr);
@@ -62,7 +59,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Unit::Plotter => {
             let plotter = Plotter::new(name);
             Server::builder()
-                .add_service(PlotterServer::new(PlotterServerState::new(plotter, delayer)))
+                .add_service(PlotterServer::new(PlotterServerState::new(
+                    plotter, delayer,
+                )))
                 .serve(addr)
                 .await?;
         }
@@ -76,14 +75,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Unit::InputStack => {
             let stack = InputStack::new(name, 10);
             Server::builder()
-                .add_service(InputStackServer::new(InputStackServerState::new(stack, delayer)))
+                .add_service(InputStackServer::new(InputStackServerState::new(
+                    stack, delayer,
+                )))
                 .serve(addr)
                 .await?;
         }
         Unit::OutputStack => {
             let stack = OutputStack::new(name);
             Server::builder()
-                .add_service(OutputStackServer::new(OutputStackServerState::new(stack, delayer)))
+                .add_service(OutputStackServer::new(OutputStackServerState::new(
+                    stack, delayer,
+                )))
                 .serve(addr)
                 .await?;
         }

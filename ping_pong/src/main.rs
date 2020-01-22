@@ -50,7 +50,7 @@ fn main() -> std::io::Result<()> {
             other: addr.recipient(),
             sends: String::from("Ping"),
         }
-            .start();
+        .start();
 
         Pinger {
             id: 1,

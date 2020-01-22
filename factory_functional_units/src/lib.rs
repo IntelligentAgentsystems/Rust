@@ -7,9 +7,8 @@ pub use self::input_stack::*;
 pub use self::output_stack::*;
 pub use self::plotter::*;
 pub use self::server::{
-    ConveyorServer, ConveyorServerState, InputStackServer, InputStackServerState,
+    ConveyorServer, ConveyorServerState, Delayer, InputStackServer, InputStackServerState,
     OutputStackServer, OutputStackServerState, PlotterServer, PlotterServerState,
-    Delayer
 };
 
 mod conveyor;
