@@ -1,0 +1,77 @@
+syntax = "proto3";
+package functional_units;
+
+import "google/protobuf/empty.proto";
+
+enum Orientation {
+    NORTH = 0;
+    EAST = 1;
+    SOUTH = 2;
+    WEST = 3;
+}
+
+message PushOrPullResult {
+    enum Code {
+        OK = 0;
+        EMPTY = 1;
+        FULL = 2;
+    }
+    Code code = 1;
+}
+
+service Plotter {
+    rpc Status (google.protobuf.Empty) returns (PlotterStatus);
+    rpc Plot (google.protobuf.Empty) returns (PlotResult);
+    rpc Push (google.protobuf.Empty) returns (PushOrPullResult);
+    rpc Pull (google.protobuf.Empty) returns (PushOrPullResult);
+}
+
+message PlotterStatus {
+    string name = 1;
+    bool has_paper = 2;
+}
+
+message PlotResult {
+    enum Code {
+        OK = 0;
+        NO_PAPER = 1;
+    }
+    Code code = 1;
+}
+
+service Conveyor {
+    rpc Status (google.protobuf.Empty) returns (ConveyorStatus);
+    rpc TurnTo (TurnToRequest) returns (google.protobuf.Empty);
+    rpc Push (google.protobuf.Empty) returns (PushOrPullResult);
+    rpc Pull (google.protobuf.Empty) returns (PushOrPullResult);
+}
+
+message TurnToRequest {
+    Orientation target = 1;
+}
+
+message ConveyorStatus {
+    string name = 1;
+    bool has_paper = 2;
+    Orientation orientation = 3;
+}
+
+service InputStack {
+    rpc Status (google.protobuf.Empty) returns (InputStackStatus);
+    rpc Push (google.protobuf.Empty) returns (PushOrPullResult);
+}
+
+message InputStackStatus {
+    string name = 1;
+    uint32 paper_count = 2;
+}
+
+service OutputStack {
+    rpc Status (google.protobuf.Empty) returns (OutputStackStatus);
+    rpc Pull (google.protobuf.Empty) returns (PushOrPullResult);
+}
+
+message OutputStackStatus {
+    string name = 1;
+    uint32 paper_count = 2;
+}

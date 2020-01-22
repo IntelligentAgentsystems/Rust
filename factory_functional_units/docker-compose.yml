@@ -1,0 +1,68 @@
+version: '3.4'
+
+services:
+  plotter1:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    command: [ "--port", "5000", "--name", "Plotter 1", "--unit", "Plotter" ]
+  plotter2:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    command: [ "--port", "5001", "--name", "Plotter 2", "--unit", "Plotter" ]
+  plotter3:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    command: [ "--port", "5002", "--name", "Plotter 3", "--unit", "Plotter" ]
+  plotter4:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    command: [ "--port", "5003", "--name", "Plotter 4", "--unit", "Plotter" ]
+  input:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5004:5004"
+    command: [ "--port", "5004", "--name", "Main", "--unit", "InputStack" ]
+  output:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5005"
+    command: [ "--port", "5005", "--name", "Main", "--unit", "OutputStack" ]
+  conv1:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    command: [ "--port", "5006", "--name", "Conveyor 1", "--unit", "Conveyor" ]
+  conv2:
+    image: ${DOCKER_REGISTRY-}factory_functional_units
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5007:5007"
+    command: [ "--port", "5007", "--name", "Conveyor 2", "--unit", "Conveyor" ]
+        

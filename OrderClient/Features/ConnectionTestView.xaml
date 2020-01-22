@@ -1,0 +1,28 @@
+﻿<UserControl
+    x:Class="OrderClient.Features.ConnectionTestView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <StackPanel>
+        <TextBlock
+            HorizontalAlignment="Center"
+            FontSize="14"
+            FontWeight="Bold"
+            Text="Test connection to server" />
+        <UniformGrid Margin="0,5" Rows="1">
+            <TextBlock VerticalAlignment="Center">Host:</TextBlock>
+            <TextBox Text="{Binding Host}" />
+        </UniformGrid>
+        <Button
+            Margin="0,2"
+            Command="{Binding TestConnection}"
+            Content="Test"
+            IsEnabled="{Binding IsReady}" />
+        <TextBox
+            Height="200"
+            IsReadOnly="True"
+            Text="{Binding Output}" />
+    </StackPanel>
+</UserControl>
