@@ -128,10 +128,10 @@ impl Plotter {
     }
 
     pub fn pull_in(&mut self) -> Result<(), String> {
-        if !self.has_paper {
+        if self.has_paper {
             Err(String::from("Plotter full"))
         } else {
-            println!("Plotter '{}'- push_in", self.name);
+            println!("Plotter '{}'- pull_in", self.name);
             self.has_paper = true;
             Ok(())
         }
