@@ -1,5 +1,7 @@
 use std::sync::Mutex;
+use std::time::Duration;
 
+use rand::Rng;
 use tonic::{Request, Response, Status};
 
 pub use functional_units::conveyor_server::ConveyorServer;
@@ -66,14 +68,33 @@ impl Into<functional_units::PlotResult> for Result<(), PlotError> {
     }
 }
 
+pub struct Delayer {
+    min: Duration,
+    max: Duration,
+}
+
+impl Delayer {
+    pub fn new(min: Duration, max: Duration) -> Delayer {
+        Delayer { min, max }
+    }
+
+    pub async fn delay(&self) {
+        let dur = rand::thread_rng().gen_range(self.min, self.max);
+        println!("Sleeping for {:?}", dur);
+        tokio::time::delay_for(dur).await;
+    }
+}
+
 pub struct PlotterServerState {
     state: Mutex<Plotter>,
+    delayer: Delayer,
 }
 
 impl PlotterServerState {
-    pub fn new(p: Plotter) -> PlotterServerState {
+    pub fn new(p: Plotter, delayer: Delayer) -> PlotterServerState {
         PlotterServerState {
             state: Mutex::new(p),
+            delayer,
         }
     }
 }
@@ -94,8 +115,11 @@ impl functional_units::plotter_server::Plotter for PlotterServerState {
     }
 
     async fn plot(&self, _: Request<()>) -> Result<Response<functional_units::PlotResult>, Status> {
-        let state = self.state.lock().unwrap();
-        let res = state.plot();
+        let res = {
+            let state = self.state.lock().unwrap();
+            state.plot()
+        };
+        self.delayer.delay().await;
         println!("plot - {:?}", res);
         Ok(Response::new(res.into()))
     }
@@ -104,8 +128,11 @@ impl functional_units::plotter_server::Plotter for PlotterServerState {
         &self,
         _: Request<()>,
     ) -> Result<Response<functional_units::PushOrPullResult>, Status> {
-        let mut state = self.state.lock().unwrap();
-        let res = state.pull();
+        let res = {
+            let mut state = self.state.lock().unwrap();
+            state.pull()
+        };
+        self.delayer.delay().await;
         println!("pull - {:?}", res);
         Ok(Response::new(res.into()))
     }
@@ -114,8 +141,11 @@ impl functional_units::plotter_server::Plotter for PlotterServerState {
         &self,
         _: Request<()>,
     ) -> Result<Response<functional_units::PushOrPullResult>, Status> {
-        let mut state = self.state.lock().unwrap();
-        let res = state.push();
+        let res = {
+            let mut state = self.state.lock().unwrap();
+            state.push()
+        };
+        self.delayer.delay().await;
         println!("push - {:?}", res);
         Ok(Response::new(res.into()))
     }
@@ -123,12 +153,14 @@ impl functional_units::plotter_server::Plotter for PlotterServerState {
 
 pub struct ConveyorServerState {
     state: Mutex<Conveyor>,
+    delayer: Delayer,
 }
 
 impl ConveyorServerState {
-    pub fn new(c: Conveyor) -> ConveyorServerState {
+    pub fn new(c: Conveyor, delayer: Delayer) -> ConveyorServerState {
         ConveyorServerState {
             state: Mutex::new(c),
+            delayer,
         }
     }
 }
@@ -153,9 +185,12 @@ impl functional_units::conveyor_server::Conveyor for ConveyorServerState {
         &self,
         req: Request<functional_units::TurnToRequest>,
     ) -> Result<Response<()>, Status> {
-        let mut state = self.state.lock().unwrap();
         let target = functional_units::Orientation::from_i32(req.get_ref().target).unwrap();
-        state.turn_to(target.into());
+        {
+            let mut state = self.state.lock().unwrap();
+            state.turn_to(target.into());
+        }
+        self.delayer.delay().await;
         println!("turn_to - {:?}", target);
 
         Ok(Response::new(()))
@@ -165,8 +200,11 @@ impl functional_units::conveyor_server::Conveyor for ConveyorServerState {
         &self,
         _: Request<()>,
     ) -> Result<Response<functional_units::PushOrPullResult>, Status> {
-        let mut state = self.state.lock().unwrap();
-        let res = state.push();
+        let res = {
+            let mut state = self.state.lock().unwrap();
+            state.push()
+        };
+        self.delayer.delay().await;
         println!("push - {:?}", res);
         Ok(Response::new(res.into()))
     }
@@ -175,8 +213,11 @@ impl functional_units::conveyor_server::Conveyor for ConveyorServerState {
         &self,
         _: Request<()>,
     ) -> Result<Response<functional_units::PushOrPullResult>, Status> {
-        let mut state = self.state.lock().unwrap();
-        let res = state.pull();
+        let res = {
+            let mut state = self.state.lock().unwrap();
+            state.pull()
+        };
+        self.delayer.delay().await;
         println!("pull - {:?}", res);
         Ok(Response::new(res.into()))
     }
@@ -184,12 +225,14 @@ impl functional_units::conveyor_server::Conveyor for ConveyorServerState {
 
 pub struct InputStackServerState {
     state: Mutex<InputStack>,
+    delayer: Delayer,
 }
 
 impl InputStackServerState {
-    pub fn new(s: InputStack) -> InputStackServerState {
+    pub fn new(s: InputStack, delayer: Delayer) -> InputStackServerState {
         InputStackServerState {
             state: Mutex::new(s),
+            delayer,
         }
     }
 }
@@ -213,8 +256,11 @@ impl functional_units::input_stack_server::InputStack for InputStackServerState 
         &self,
         _: Request<()>,
     ) -> Result<Response<functional_units::PushOrPullResult>, Status> {
-        let mut state = self.state.lock().unwrap();
-        let res = state.push();
+        let res = {
+            let mut state = self.state.lock().unwrap();
+            state.push()
+        };
+        self.delayer.delay().await;
         println!("push - {:?}", res);
         Ok(Response::new(res.into()))
     }
@@ -222,12 +268,14 @@ impl functional_units::input_stack_server::InputStack for InputStackServerState 
 
 pub struct OutputStackServerState {
     state: Mutex<OutputStack>,
+    delayer: Delayer,
 }
 
 impl OutputStackServerState {
-    pub fn new(s: OutputStack) -> OutputStackServerState {
+    pub fn new(s: OutputStack, delayer: Delayer) -> OutputStackServerState {
         OutputStackServerState {
             state: Mutex::new(s),
+            delayer,
         }
     }
 }
@@ -251,8 +299,11 @@ impl functional_units::output_stack_server::OutputStack for OutputStackServerSta
         &self,
         _: Request<()>,
     ) -> Result<Response<functional_units::PushOrPullResult>, Status> {
-        let mut state = self.state.lock().unwrap();
-        state.pull();
+        {
+            let mut state = self.state.lock().unwrap();
+            state.pull();
+        }
+        self.delayer.delay().await;
         println!("pull");
         Ok(Response::new(Ok(()).into()))
     }
